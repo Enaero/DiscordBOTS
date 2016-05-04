@@ -1,9 +1,21 @@
+group 'enaero'
+version '0.1'
+
 apply plugin: 'java'
 
+sourceCompatibility = 1.8
+
 repositories {
-  mavenCentral()
+    jcenter()
 }
 
 dependencies {
-  compile 'com.github.scribejava:scribejava-apis:2.5.3'
+    compile 'net.dv8tion:JDA:2.0.0_242'
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Main-Class': 'com.github.enaero.Main'
+    }
 }

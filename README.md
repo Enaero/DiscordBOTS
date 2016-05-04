@@ -1,2 +1,2 @@
 # DiscordBOTS
-Bots for the discord chat service
+Bots for the Discord chat service.
