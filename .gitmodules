@@ -1,0 +1,6 @@
+[submodule "sanmoku"]
+	path = sanmoku
+	url = ./program-ab/
+[submodule "program-ab"]
+	path = program-ab
+	url = ./program-ab/

@@ -6,6 +6,8 @@ import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 
+import org.alicebot.ab.*;
+
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.*;
@@ -17,11 +19,18 @@ import java.util.concurrent.TimeUnit;
 public class EnaeroBOT extends ListenerAdapter implements Runnable {
     // Connector to Discord API
     private JDA mJDA = null;
+    private Bot mBot = null;
+    private Chat mChatSession = null;
+
+    //private ChatterBotSession mChatterBotSession = null;
 
     // Meta info
-    String mName = "EnaeroBOT";
+    final String mName = "EnaeroBOT";
+    final String mSourceBot = "jokebot";
+
+    //final ChatterBotType mChatterBotType = ChatterBotType.CLEVERBOT;
     Map<String, Long> mKnownUsers = null;
-    
+
     // YouTube links to songs
     private String[] mHalloweenSongs = {
             "https://www.youtube.com/watch?v=4OFNVYcjR1c",
@@ -42,10 +51,16 @@ public class EnaeroBOT extends ListenerAdapter implements Runnable {
                     .addListener(this)
                     .buildAsync();
             mKnownUsers = new HashMap<>();
+            mBot = new Bot(mSourceBot, Config.programAbPath);
+            mChatSession = new Chat(mBot);
         }
         catch (LoginException e) {
             e.printStackTrace(System.err);
             System.err.println("Error logging in: " + e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Unknown exception: " + e.getMessage());
         }
     }
 
@@ -75,12 +90,17 @@ public class EnaeroBOT extends ListenerAdapter implements Runnable {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        System.out.println("I received a Guild Message!");
         String messageLower = event.getMessage().getContent().toLowerCase();
         String author = event.getAuthor().getUsername();
         String authorId = event.getAuthor().getId();
         String gameName = event.getAuthor().getCurrentGame();
 
+        System.out.println("I received a Guild Message!: " + messageLower);
+
+        if (event.getAuthor().getId().equals(mJDA.getSelfInfo().getId())) {
+            return;
+        }
+        
         if (messageLower.contains("happy halloween")) {
             int index = new Random().nextInt(mHalloweenSongs.length);
             event.getChannel().sendMessage(mHalloweenSongs[index]);
@@ -88,6 +108,11 @@ public class EnaeroBOT extends ListenerAdapter implements Runnable {
         else if (messageLower.contains("secret")){
             int index = new Random().nextInt(mSecretSongs.length);
             event.getChannel().sendMessage(mSecretSongs[index]);
+        }
+        else if (messageLower.contains(mName.toLowerCase())) {
+            String request = messageLower.replace(mName.toLowerCase(), "alice");
+            String response = mChatSession.multisentenceRespond(request).replace("ALICE", mName);
+            event.getChannel().sendMessage(response);
         }
         else if (messageLower.equals("hi") || messageLower.equals("hello") || messageLower.equals("hey")) {
             if (!mKnownUsers.containsKey(authorId)) {

@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     compile 'net.dv8tion:JDA:2.0.0_242'
-    compile 'ca.pjer:chatter-bot-api:1.3.3'
+    compile files('build/libs/program-ab.jar')
 }
 
 jar {
