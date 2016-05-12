@@ -26,7 +26,7 @@ public class EnaeroBOT extends ListenerAdapter implements Runnable {
 
     // Meta info
     final String mName = "EnaeroBOT";
-    final String mSourceBot = "jokebot";
+    final String mSourceBot = "alice2";
 
     //final ChatterBotType mChatterBotType = ChatterBotType.CLEVERBOT;
     Map<String, Long> mKnownUsers = null;
