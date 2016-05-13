@@ -1,6 +1,6 @@
 [submodule "sanmoku"]
 	path = sanmoku
-	url = ./program-ab/
+	url = https://github.com/sile/sanmoku.git
 [submodule "program-ab"]
 	path = program-ab
-	url = ./program-ab/
+	url = https://github.com/macphongtran168/program-ab.git
